@@ -3,10 +3,10 @@ import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:share/share.dart';
 
 class NewsItem extends StatelessWidget {
+  const NewsItem(this.news, {this.divider = true});
+
   final Map news;
   final bool divider;
-
-  NewsItem(this.news, {this.divider: true});
 
   @override
   Widget build(BuildContext context) {
@@ -14,9 +14,9 @@ class NewsItem extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 8.0, left: 8.0, right: 8.0),
       child: Column(
         children: <Widget>[
-          this.divider ? Divider(height: 16.0) : Container(),
+          if (divider) const Divider(height: 16.0) else Container(),
           InkWell(
-            onTap: () => _launchURL(context, news["url"]),
+            onTap: () => _launchURL(context, news['url']),
             borderRadius: BorderRadius.circular(6.0),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -30,10 +30,10 @@ class NewsItem extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text(news["source"].toString().toUpperCase()),
-                            SizedBox(height: 4.0),
+                            Text(news['source'].toString().toUpperCase()),
+                            const SizedBox(height: 4.0),
                             Text(
-                              news["headline"],
+                              news['headline'],
                               maxLines: 3,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
@@ -48,13 +48,14 @@ class NewsItem extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Text(news["datetime"].toString().split("T")[0],
+                      Text(news['datetime'].toString().split('T')[0],
                           style: TextStyle(color: Colors.grey)),
                       IconButton(
-                          icon: Icon(Icons.share),
-                          onPressed: () {
-                            Share.share(news["headline"] + ": " + news["url"]);
-                          })
+                        icon: Icon(Icons.share),
+                        onPressed: () {
+                          Share.share(news['headline'] + ': ' + news['url']);
+                        },
+                      ),
                     ],
                   ),
                 ],
@@ -66,7 +67,7 @@ class NewsItem extends StatelessWidget {
     );
   }
 
-  void _launchURL(BuildContext context, String url) async {
+  Future<void> _launchURL(BuildContext context, String url) async {
     try {
       await launch(
         url,
@@ -83,7 +84,7 @@ class NewsItem extends StatelessWidget {
     }
   }
 
-  Widget getImage(context) {
+  Widget getImage(BuildContext context) {
     /*try {
       return news["image"] != null
           ? Card(

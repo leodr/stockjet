@@ -20,7 +20,7 @@ void main() {
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarIconBrightness: Brightness.light,
-      systemNavigationBarColor: const Color(0xFF37474F),
+      systemNavigationBarColor: Color(0xFF37474F),
       systemNavigationBarDividerColor: Colors.white,
       systemNavigationBarIconBrightness: Brightness.light,
     ),
@@ -48,8 +48,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
-  List<Widget> stocksList = [
-    SizedBox(
+  List<Widget> stocksList = <Widget>[
+    const SizedBox(
         height: 700.0,
         child: Center(
           child: CircularProgressIndicator(),
@@ -58,12 +58,12 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   List newsList = [];
 
-  List<String> companies = [];
+  List<String> companies = <String>[];
 
-  List<String> favoriteList = [];
+  List<String> favoriteList = <String>[];
 
   final String newsUrl =
-      "https://api.iextrading.com/1.0/stock/market/news/last/20";
+      'https://api.iextrading.com/1.0/stock/market/news/last/20';
 
   int index = 0;
 
@@ -87,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   }
 
   Widget _buildHomePage() => RefreshIndicator(
-        key: Key("home"),
+        key: const Key('home'),
         displacement: kToolbarHeight,
         onRefresh: () async {
           return await getStocksData();
@@ -100,11 +100,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               actions: <Widget>[_buildSearchButton()],
               title: RichText(
                   text: TextSpan(
-                      text: "Stoxer ",
+                      text: 'Stoxer ',
                       style: Theme.of(context).textTheme.headline6,
-                      children: [
+                      children: <TextSpan>[
                     TextSpan(
-                        text: "Home",
+                        text: 'Home',
                         style: Theme.of(context)
                             .textTheme
                             .headline6
@@ -117,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       );
 
   Widget _buildNewsPage() => RefreshIndicator(
-        key: Key("news"),
+        key: const Key('news'),
         displacement: kToolbarHeight,
         onRefresh: () async {
           return await getNewsData();
@@ -128,11 +128,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             SDSliverAppBar(
               title: RichText(
                   text: TextSpan(
-                      text: "Stoxer ",
+                      text: 'Stoxer ',
                       style: Theme.of(context).textTheme.headline6,
-                      children: [
+                      children: <TextSpan>[
                     TextSpan(
-                        text: "News",
+                        text: 'News',
                         style: Theme.of(context)
                             .textTheme
                             .headline6
@@ -142,7 +142,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               actions: <Widget>[_buildSearchButton()],
             ),
             SliverList(
-                delegate: SliverChildBuilderDelegate((context, index) {
+                delegate: SliverChildBuilderDelegate(
+                    (BuildContext context, int index) {
               return NewsItem(
                 newsList[index],
                 divider: index != 0,
@@ -153,7 +154,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       );
 
   Widget _buildFavoritesPage() => RefreshIndicator(
-        key: Key("favorite"),
+        key: const Key('favorite'),
         onRefresh: () async {
           return await getFavorites();
         },
@@ -164,11 +165,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               pinned: true,
               title: RichText(
                   text: TextSpan(
-                      text: "Stoxer ",
+                      text: 'Stoxer ',
                       style: Theme.of(context).textTheme.headline6,
-                      children: [
+                      children: <TextSpan>[
                     TextSpan(
-                        text: "Favorites",
+                        text: 'Favorites',
                         style: Theme.of(context)
                             .textTheme
                             .headline6
@@ -185,15 +186,16 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               ],
             ),
             SliverList(
-              delegate: SliverChildBuilderDelegate((context, index) {
+              delegate:
+                  SliverChildBuilderDelegate((BuildContext context, int index) {
                 return Dismissible(
                   direction: DismissDirection.startToEnd,
-                  onDismissed: (direction) {
+                  onDismissed: (DismissDirection direction) {
                     updatePrefs(favoriteList[index]);
                   },
                   background: Container(
                     color: Theme.of(context).errorColor,
-                    padding: EdgeInsets.symmetric(horizontal: 12.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
                     child: Align(
                         alignment: Alignment.centerLeft,
                         child: Icon(Icons.clear)),
@@ -212,7 +214,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                 getName(favoriteList[index]),
                                 style: Theme.of(context).textTheme.bodyText2,
                               ),
-                              SizedBox(height: 2.0),
+                              const SizedBox(height: 2.0),
                               Text(
                                 favoriteList[index],
                                 style: Theme.of(context).textTheme.subtitle2,
@@ -226,9 +228,13 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                             color: IconTheme.of(context).color,
                           ),
                           onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    CompanyPage(favoriteList[index])));
+                            Navigator.of(context).push(
+                              MaterialPageRoute<void>(
+                                builder: (BuildContext context) => CompanyPage(
+                                  favoriteList[index],
+                                ),
+                              ),
+                            );
                           },
                         ),
                       ],
@@ -255,19 +261,19 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         return _buildFavoritesPage();
     }
 
-    return Text("Error");
+    return const Text('Error');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: AnimatedSwitcher(
-        duration: Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 200),
         child: _getBody(index),
       ),
       bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
-          onTap: (position) async {
+          onTap: (int position) async {
             if (position != index) {
               setState(() {
                 index = position;
@@ -276,52 +282,52 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               switch (index) {
                 case 0:
                   firstPageScroller.animateTo(0.0,
-                      duration: Duration(milliseconds: 300),
+                      duration: const Duration(milliseconds: 300),
                       curve: Curves.easeInOut);
                   break;
                 case 1:
                   secondPageScroller.animateTo(0.0,
-                      duration: Duration(milliseconds: 300),
+                      duration: const Duration(milliseconds: 300),
                       curve: Curves.easeInOut);
                   break;
                 case 2:
                   thirdPageScroller.animateTo(0.0,
-                      duration: Duration(milliseconds: 300),
+                      duration: const Duration(milliseconds: 300),
                       curve: Curves.easeInOut);
                   break;
               }
             }
           },
           currentIndex: index,
-          items: [
+          items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-                title: Text("Home"),
+                title: const Text('Home'),
                 icon: Icon(MdiIcons.homeVariantOutline),
                 activeIcon: Icon(MdiIcons.homeVariant)),
             BottomNavigationBarItem(
-                title: Text("News"), icon: Icon(MdiIcons.newspaper)),
+                title: const Text('News'), icon: Icon(MdiIcons.newspaper)),
             BottomNavigationBarItem(
-                title: Text("Favorites"),
+                title: const Text('Favorites'),
                 icon: Icon(Icons.star_border),
                 activeIcon: Icon(Icons.star)),
           ]),
     );
   }
 
-  Future<Null> getStocksData() async {
-    List<Widget> list = [];
+  Future<void> getStocksData() async {
+    final List<Widget> list = <Widget>[];
 
-    var response = await http
-        .get("https://api.iextrading.com/1.0/stock/market/list/gainers");
-    var winners = json.decode(response.body);
+    http.Response response = await http
+        .get('https://api.iextrading.com/1.0/stock/market/list/gainers');
+    final winners = json.decode(response.body);
 
-    list.add(SDSectionHeader("Winners"));
+    list.add(SDSectionHeader('Winners'));
 
     list.add(SizedBox(
       height: 50.0,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemBuilder: (context, index) => Row(
+        itemBuilder: (BuildContext context, int index) => Row(
           children: <Widget>[
             CustomListItem(winners[index]),
             Container(
@@ -338,16 +344,16 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     ));
 
     response = await http
-        .get("https://api.iextrading.com/1.0/stock/market/list/losers");
-    var losers = json.decode(response.body);
+        .get('https://api.iextrading.com/1.0/stock/market/list/losers');
+    final losers = json.decode(response.body);
 
-    list.add(SDSectionHeader("Losers"));
+    list.add(SDSectionHeader('Losers'));
 
     list.add(SizedBox(
       height: 50.0,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemBuilder: (context, index) => Row(
+        itemBuilder: (BuildContext context, int index) => Row(
           children: <Widget>[
             CustomListItem(losers[index]),
             Container(
@@ -363,9 +369,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       ),
     ));
 
-    list.add(SizedBox(height: 20.0));
+    list.add(const SizedBox(height: 20.0));
 
-    List<String> favs = await getFavs();
+    final List<String> favs = await getFavs();
     if (favs != null) {
       for (int i = 0; i < favs.length; i++) {
         list.add(
@@ -383,12 +389,12 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             color: Theme.of(context).scaffoldBackgroundColor,
             highlightedBorderColor: Theme.of(context).accentColor,
             highlightColor: Colors.transparent,
-            onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+            onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(
                 builder: (BuildContext context) => SearchPage())),
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               Icon(Icons.add),
-              SizedBox(width: 8.0),
-              Text("ADD FAVORITES",
+              const SizedBox(width: 8.0),
+              Text('ADD FAVORITES',
                   style:
                       TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0)),
             ]),
@@ -400,19 +406,15 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     setState(() {
       stocksList = list;
     });
-
-    return null;
   }
 
-  Future<Null> getNewsData() async {
-    var response = await http.get(newsUrl);
-    List jsonCode = json.decode(response.body);
+  Future<void> getNewsData() async {
+    final http.Response response = await http.get(newsUrl);
+    final List jsonCode = json.decode(response.body) as List;
 
     setState(() {
       newsList = jsonCode;
     });
-
-    return null;
   }
 
   Future getCompanies() async {
@@ -421,23 +423,23 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   String getName(String stockKey) {
     for (int i = 0; i < companies.length; i++) {
-      if (companies[i].split(", ")[0] == stockKey) {
-        return companies[i].split(", ")[1];
+      if (companies[i].split(', ')[0] == stockKey) {
+        return companies[i].split(', ')[1];
       }
     }
 
-    return "";
+    return '';
   }
 
   Future<List<String>> getFavs() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    List<String> favs = prefs.getStringList("favs");
+    final List<String> favs = prefs.getStringList('favs');
 
     print(favs);
 
     if (favs != null) {
-      if (favs.length > 0) {
+      if (favs.isNotEmpty) {
         return favs;
       }
     }
@@ -445,43 +447,44 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     return null;
   }
 
-  Future<Null> getFavorites() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  Future<void> getFavorites() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     setState(() {
-      favoriteList = prefs.getStringList("favs");
+      favoriteList = prefs.getStringList('favs');
     });
-
-    return null;
   }
 
-  void updatePrefs(String companyId) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> favs = prefs.getStringList("favs");
+  Future<void> updatePrefs(String companyId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> favs = prefs.getStringList('favs');
     if (favs != null) {
-      if (favs.indexOf(companyId) == -1) {
+      if (!favs.contains(companyId)) {
         favs.add(companyId);
       } else {
         favs.remove(companyId);
       }
     } else {
-      favs = [companyId];
+      favs = <String>[companyId];
     }
 
-    prefs.setStringList("favs", favs);
+    prefs.setStringList('favs', favs);
   }
 
   Widget _buildSearchButton() => IconButton(
         icon: Icon(Icons.search),
         onPressed: () => Navigator.of(context).push(
-            MaterialPageRoute(builder: (BuildContext context) => SearchPage())),
+          MaterialPageRoute<void>(
+            builder: (BuildContext context) => SearchPage(),
+          ),
+        ),
       );
 }
 
 class CircleClipper extends CustomClipper<Rect> {
-  double radius;
-
   CircleClipper(this.radius);
+
+  double radius;
 
   @override
   bool shouldReclip(CustomClipper<Rect> oldClipper) => true;

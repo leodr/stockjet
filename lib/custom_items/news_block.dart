@@ -6,20 +6,21 @@ import 'package:stockjet/custom_items/news_item.dart';
 import 'package:stockjet/data_controller.dart';
 
 class NewsBlock extends StatefulWidget {
+  const NewsBlock({this.newsCount = 2, @required this.stockKey});
+
   final int newsCount;
   final String stockKey;
 
-  NewsBlock({this.newsCount: 2, @required this.stockKey});
-
   @override
   NewsBlockState createState() {
-    return new NewsBlockState();
+    return NewsBlockState();
   }
 }
 
 class NewsBlockState extends State<NewsBlock> {
-  List<Widget> newsList = [
-    SizedBox(height: 100.0, child: Center(child: CircularProgressIndicator()))
+  List<Widget> newsList = <Widget>[
+    const SizedBox(
+        height: 100.0, child: Center(child: CircularProgressIndicator()))
   ];
 
   @override
@@ -36,12 +37,12 @@ class NewsBlockState extends State<NewsBlock> {
     );
   }
 
-  Future getNews() async {
-    List<Widget> newsItemList = [];
+  Future<void> getNews() async {
+    final List<Widget> newsItemList = <Widget>[];
 
-    var response = await storage.get(
+    final String response = await storage.get(
         symbol: widget.stockKey, attribute: Attributes.shortNews);
-    List news = json.decode(response);
+    final List news = json.decode(response) as List;
 
     for (int i = 0; i < news.length; i++) {
       newsItemList.add(NewsItem(

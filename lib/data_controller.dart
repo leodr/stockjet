@@ -13,9 +13,9 @@ class DataController {
     if (companies.length > 1) {
       return companies;
     } else {
-      var response =
-          await http.get("https://api.iextrading.com/1.0/ref-data/symbols");
-      companies = json.decode(response.body);
+      final http.Response response =
+          await http.get('https://api.iextrading.com/1.0/ref-data/symbols');
+      companies = json.decode(response.body) as List;
 
       return companies;
     }
@@ -24,7 +24,7 @@ class DataController {
   Future<String> get(
       {@required String symbol,
       Attributes attribute,
-      bool refresh: false}) async {
+      bool refresh = false}) async {
     if (attribute == null) {
       return data[symbol].toString();
     }
@@ -32,66 +32,66 @@ class DataController {
     String request;
 
     try {
-      request = data[symbol] != null
-          ? data[symbol][attribute.toString().split(".")[1]]
-          : null;
+      request = (data[symbol] != null
+          ? data[symbol][attribute.toString().split('.')[1]]
+          : null) as String;
     } catch (e) {
       request = null;
     }
 
-    if (request == null || request == "" || refresh) {
-      String url = "";
+    if (request == null || request == '' || refresh) {
+      String url = '';
 
       switch (attribute) {
         case Attributes.news:
-          url = "https://api.iextrading.com/1.0/stock/$symbol/news/last/10";
+          url = 'https://api.iextrading.com/1.0/stock/$symbol/news/last/10';
           break;
         case Attributes.shortNews:
-          url = "https://api.iextrading.com/1.0/stock/$symbol/news/last/2";
+          url = 'https://api.iextrading.com/1.0/stock/$symbol/news/last/2';
           break;
         case Attributes.company:
-          url = "https://api.iextrading.com/1.0/stock/$symbol/company";
+          url = 'https://api.iextrading.com/1.0/stock/$symbol/company';
           break;
         case Attributes.quote:
-          url = "https://api.iextrading.com/1.0/stock/$symbol/quote";
+          url = 'https://api.iextrading.com/1.0/stock/$symbol/quote';
           break;
         case Attributes.stats:
-          url = "https://api.iextrading.com/1.0/stock/$symbol/stats";
+          url = 'https://api.iextrading.com/1.0/stock/$symbol/stats';
           break;
         case Attributes.logoUrl:
-          url = "https://api.iextrading.com/1.0/stock/$symbol/logo";
+          url = 'https://api.iextrading.com/1.0/stock/$symbol/logo';
           break;
         case Attributes.chart5y:
-          url = "https://api.iextrading.com/1.0/stock/$symbol/chart/5y";
+          url = 'https://api.iextrading.com/1.0/stock/$symbol/chart/5y';
           break;
         case Attributes.chart2y:
-          url = "https://api.iextrading.com/1.0/stock/$symbol/chart/2y";
+          url = 'https://api.iextrading.com/1.0/stock/$symbol/chart/2y';
           break;
         case Attributes.chart1y:
-          url = "https://api.iextrading.com/1.0/stock/$symbol/chart/1y";
+          url = 'https://api.iextrading.com/1.0/stock/$symbol/chart/1y';
           break;
         case Attributes.chart6m:
-          url = "https://api.iextrading.com/1.0/stock/$symbol/chart/6m";
+          url = 'https://api.iextrading.com/1.0/stock/$symbol/chart/6m';
           break;
         case Attributes.chart3m:
-          url = "https://api.iextrading.com/1.0/stock/$symbol/chart/3m";
+          url = 'https://api.iextrading.com/1.0/stock/$symbol/chart/3m';
           break;
         case Attributes.chart1m:
-          url = "https://api.iextrading.com/1.0/stock/$symbol/chart/1m";
+          url = 'https://api.iextrading.com/1.0/stock/$symbol/chart/1m';
           break;
         case Attributes.chart1d:
-          url = "https://api.iextrading.com/1.0/stock/$symbol/chart/1d";
+          url = 'https://api.iextrading.com/1.0/stock/$symbol/chart/1d';
           break;
       }
 
-      var response = await http.get(url);
+      final http.Response response = await http.get(url);
 
       if (data.containsKey(symbol)) {
         data[symbol]
-            .addAll({attribute.toString().split(".")[1]: response.body});
+            .addAll({attribute.toString().split('.')[1]: response.body});
       } else {
         data.addAll({
-          symbol: {attribute.toString().split(".")[1]: response.body}
+          symbol: {attribute.toString().split('.')[1]: response.body}
         });
       }
       return response.body;
